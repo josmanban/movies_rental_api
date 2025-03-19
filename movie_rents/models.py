@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Relationship
 from typing import Optional
 
 
@@ -12,28 +12,31 @@ class MovieRentBase(SQLModel):
 
 class MovieRent(MovieRentBase, table=True):
     id: int = Field(default=None, primary_key=True)
+    details: list["MovieRentDetail"] = Relationship(
+        back_populates="movie_rent", cascade_delete=True
+    )
+
+
+class MovieRentCreate(MovieRentBase):
+    details: list["MovieRentDetail"]
+
+
+class MovieRentUpdate(MovieRentBase):
+    details: list["MovieRentDetail"]
+
+
+class MovieRentRetrieve(MovieRentBase):
+    details: list["MovieRentDetail"]
+    id: int
 
 
 class MovieRentDetailBase(SQLModel):
     movie_id: int = Field(default=None, foreign_key="movie.id")
-    movie_rent_id: int = Field(default=None, foreign_key="movierent.id")
+    movie_rent_id: int = Field(
+        default=None, foreign_key="movierent.id", ondelete="CASCADE"
+    )
 
 
 class MovieRentDetail(MovieRentDetailBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-
-
-class MovieRentDetailCreate(MovieRentDetailBase):
-    pass
-
-
-class MovieRentDetailUpdate(MovieRentDetailBase):
-    id: Optional[int] = Field(default=None, primary_key=True)
-
-
-class MovieRentCreate(MovieRentBase):
-    details: list[MovieRentDetailCreate]
-
-
-class MovieRentUpdate(MovieRentBase):
-    details: list[MovieRentDetailUpdate]
+    movie_rent: MovieRent = Relationship(back_populates="details")

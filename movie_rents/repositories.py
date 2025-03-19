@@ -7,7 +7,6 @@ from movie_rents.models import (
     MovieRent,
     MovieRentCreate,
     MovieRentUpdate,
-    MovieRentDetailCreate,
     MovieRentDetail,
 )
 
@@ -40,8 +39,8 @@ class MovieRentRepository(Repository[MovieRent]):
 
     def delete(self, id):
         instance = self.session.get(MovieRent, id)
-        statement = delete(MovieRentDetail).where(MovieRentDetail.movie_rent_id == id)
-        self.session.exec(statement)
+        # statement = delete(MovieRentDetail).where(MovieRentDetail.movie_rent_id == id)
+        # self.session.exec(statement)
         self.session.delete(instance)
         self.session.commit()
         return True
@@ -49,15 +48,6 @@ class MovieRentRepository(Repository[MovieRent]):
     def add_rent(self, new_instance: MovieRentCreate):
         rent_instance = MovieRent.model_validate(new_instance)
         new_rent = self.add(rent_instance)
-        details: list[MovieRentDetailCreate] = new_instance.details
-
-        details_to_save = []
-        for detail in details:
-            detail.movie_rent_id = new_rent.id
-            detail_instance = MovieRentDetail.model_validate(detail)
-            details_to_save.append(detail_instance)
-
-        self.session.bulk_save_objects(details_to_save)
         self.session.commit()
         self.session.refresh(new_rent)
         return new_rent
@@ -91,9 +81,8 @@ class MovieRentRepository(Repository[MovieRent]):
                 detail_instance.sqlmodel_update(detail.model_dump(exclude_unset=True))
                 self.session.add(detail_instance)
             else:
-                detail.movie_rent_id = id
-                detail_instance = MovieRentDetail.model_validate(detail)
-                self.session.add(detail_instance)
+                detail.movie_rent = updated_rent
+                self.session.add(detail)
 
         statement = delete(MovieRentDetail).where(
             MovieRentDetail.id.in_(details_to_remove_ids)  # type: ignore

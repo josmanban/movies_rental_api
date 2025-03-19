@@ -71,7 +71,7 @@ async def delete_movie(id: int, session: SessionDep):
         raise HTTPException(status_code=404, detail="Movie not found")
 
 
-@router.post("/genres", tags=["genres"])
+@router.post("/movie", tags=["movies"])
 async def add_movie(movie: Movie, session: SessionDep):
     repo = MovieRepository(session)
     return repo.add(movie)
@@ -83,7 +83,7 @@ async def add_movie_with_stock(movie: MovieCreate, session: SessionDep):
     return repo.add_with_stock(movie)
 
 
-@router.post("/movies/{id}", tags=["movies"])
+@router.put("/movies/{id}", tags=["movies"])
 async def update_movie(id: int, movie: Movie, session: SessionDep):
     try:
         repo = MovieRepository(session)
@@ -92,7 +92,7 @@ async def update_movie(id: int, movie: Movie, session: SessionDep):
         raise HTTPException(status_code=404, detail="Movie not found")
 
 
-@router.post("/movies/{id}/with_stock", tags=["movies"])
+@router.put("/movies/{id}/with_stock", tags=["movies"])
 async def update_movie_with_stock(id: int, movie: MovieUpdate, session: SessionDep):
     try:
         repo = MovieRepository(session)

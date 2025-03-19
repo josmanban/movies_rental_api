@@ -1,10 +1,9 @@
 from fastapi import APIRouter, HTTPException
 
 from base.db_connection import SessionDep
-from movie_rents.models import MovieRentCreate, MovieRentUpdate
+from movie_rents.models import MovieRentRetrieve, MovieRentCreate, MovieRentUpdate
 from movie_rents.repositories import MovieRentRepository
 from sqlalchemy.orm.exc import UnmappedInstanceError
-
 
 router = APIRouter()
 
@@ -15,7 +14,7 @@ async def list_movie_rents(session: SessionDep):
     return repo.get_all()
 
 
-@router.get("/movie_rents/{id}", tags=["movie_rents"])
+@router.get("/movie_rents/{id}", tags=["movie_rents"], response_model=MovieRentRetrieve)
 async def retrieve_movie_rent(id: int, session: SessionDep):
     repo = MovieRentRepository(session)
     instance = repo.get(id)
@@ -33,13 +32,13 @@ async def delete_genre(id: int, session: SessionDep):
         raise HTTPException(status_code=404, detail="Movie Rent not found")
 
 
-@router.post("/movie_rents", tags=["movie_rents"])
+@router.post("/movie_rents", tags=["movie_rents"], response_model=MovieRentCreate)
 async def add_movie_rent(movie_rent: MovieRentCreate, session: SessionDep):
     repo = MovieRentRepository(session)
     return repo.add_rent(movie_rent)
 
 
-@router.put("/movie_rents/{id}", tags=["movie_rents"])
+@router.put("/movie_rents/{id}", tags=["movie_rents"], response_model=MovieRentUpdate)
 async def update_movie_rent(id: int, movie_rent: MovieRentUpdate, session: SessionDep):
     try:
         repo = MovieRentRepository(session)
