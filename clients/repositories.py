@@ -11,7 +11,7 @@ class ClientRepository(Repository[Client]):
 
     def get_all(self):
         statement = select(Client)
-        result = self.session.execute(statement).all()
+        result = self.session.exec(statement).all()
         return result
 
     def add(self, new_instance: Client) -> Client:
