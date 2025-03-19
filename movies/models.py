@@ -1,4 +1,5 @@
 from sqlmodel import Field, SQLModel
+from typing import Optional
 
 
 class Genre(SQLModel, table=True):
@@ -7,8 +8,7 @@ class Genre(SQLModel, table=True):
     description: str
 
 
-class Movie(SQLModel, table=True):
-    id: int = Field(primary_key=True)
+class BaseMovie(SQLModel):
     title: str = Field(index=True)
     description: str
     year: int
@@ -17,6 +17,19 @@ class Movie(SQLModel, table=True):
     genre_id: int = Field(foreign_key="genre.id")
 
 
-class SpecificMovie(SQLModel, table=True):
+class Movie(BaseMovie, table=True):
+    id: int = Field(default=None, primary_key=True)
+
+
+class MovieCreate(BaseMovie):
+    stock: int
+
+
+class MovieUpdate(BaseMovie):
+    stock: int
+
+
+class MovieCopy(SQLModel, table=True):
     id: int = Field(primary_key=True)
     movie_id: int = Field(foreign_key="movie.id")
+    code: Optional[str] = Field(index=True)
