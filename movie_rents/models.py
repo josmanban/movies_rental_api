@@ -31,7 +31,7 @@ class MovieRentRetrieve(MovieRentBase):
 
 
 class MovieRentDetailBase(SQLModel):
-    movie_id: int = Field(default=None, foreign_key="movie.id")
+    movie_copy_id: int = Field(default=None, foreign_key="moviecopy.id")
     movie_rent_id: int = Field(
         default=None, foreign_key="movierent.id", ondelete="CASCADE"
     )
