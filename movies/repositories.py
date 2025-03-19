@@ -112,6 +112,7 @@ class MovieRepository(Repository[Movie]):
             specific_movie = MovieCopy(movie_id=new_movie.id)
             movie_copies.append(specific_movie)
         self.session.bulk_save_objects(movie_copies)
+        self.session.refresh(new_movie)
         self.session.commit()
 
         return new_movie
@@ -141,4 +142,5 @@ class MovieRepository(Repository[Movie]):
             for movie_copy in results:
                 self.session.delete(movie_copy)
         self.session.commit()
+        self.session.refresh(updated_movie)
         return updated_movie

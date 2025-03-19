@@ -1,4 +1,4 @@
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Relationship
 from typing import Optional
 
 
@@ -19,6 +19,7 @@ class BaseMovie(SQLModel):
 
 class Movie(BaseMovie, table=True):
     id: int = Field(default=None, primary_key=True)
+    copies: list["MovieCopy"] = Relationship(back_populates="movie")
 
 
 class MovieCreate(BaseMovie):
@@ -29,7 +30,24 @@ class MovieUpdate(BaseMovie):
     stock: int
 
 
-class MovieCopy(SQLModel, table=True):
-    id: int = Field(primary_key=True)
+class MoviePublic(BaseMovie):
+    id: int
+    copies: list["MovieCopyPublic"]
+
+
+class MovieCopyBase(SQLModel):
     movie_id: int = Field(foreign_key="movie.id")
     code: Optional[str] = Field(index=True)
+
+
+class MovieCopy(MovieCopyBase, table=True):
+    id: int = Field(primary_key=True)
+    movie: Movie = Relationship(back_populates="copies")
+    rents: list["MovieRentDetail"] = Relationship(back_populates="movie_copy")  # type: ignore # noqa
+
+
+class MovieCopyPublic(MovieCopyBase):
+    id: int
+    code: Optional[str]
+    movie_id: int
+    movie: Movie

@@ -32,13 +32,13 @@ async def delete_genre(id: int, session: SessionDep):
         raise HTTPException(status_code=404, detail="Movie Rent not found")
 
 
-@router.post("/movie_rents", tags=["movie_rents"], response_model=MovieRentCreate)
+@router.post("/movie_rents", tags=["movie_rents"], response_model=MovieRentRetrieve)
 async def add_movie_rent(movie_rent: MovieRentCreate, session: SessionDep):
     repo = MovieRentRepository(session)
     return repo.add_rent(movie_rent)
 
 
-@router.put("/movie_rents/{id}", tags=["movie_rents"], response_model=MovieRentUpdate)
+@router.put("/movie_rents/{id}", tags=["movie_rents"], response_model=MovieRentRetrieve)
 async def update_movie_rent(id: int, movie_rent: MovieRentUpdate, session: SessionDep):
     try:
         repo = MovieRentRepository(session)

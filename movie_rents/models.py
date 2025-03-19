@@ -1,6 +1,7 @@
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship
 from typing import Optional
+from movies.models import MovieCopy, MovieCopyPublic
 
 
 class MovieRentBase(SQLModel):
@@ -26,7 +27,7 @@ class MovieRentUpdate(MovieRentBase):
 
 
 class MovieRentRetrieve(MovieRentBase):
-    details: list["MovieRentDetail"]
+    details: list["MovieRentDetailRetrieve"]
     id: int
 
 
@@ -40,3 +41,12 @@ class MovieRentDetailBase(SQLModel):
 class MovieRentDetail(MovieRentDetailBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     movie_rent: MovieRent = Relationship(back_populates="details")
+    movie_copy: MovieCopy = Relationship(back_populates="rents")
+
+
+class MovieRentDetailRetrieve(MovieRentDetailBase):
+    id: int
+    movie_rent_id: int
+    movie_copy_id: int
+    movie_rent: MovieRent
+    movie_copy: MovieCopyPublic

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
 from base.db_connection import SessionDep
-from movies.models import Movie, Genre, MovieCreate, MovieUpdate
+from movies.models import Movie, Genre, MovieCreate, MovieUpdate, MoviePublic
 from movies.repositories import GenreRepository, MovieRepository
 from sqlalchemy.orm.exc import UnmappedInstanceError
 
@@ -77,7 +77,7 @@ async def add_movie(movie: Movie, session: SessionDep):
     return repo.add(movie)
 
 
-@router.post("/movies/with_stock", tags=["movies"])
+@router.post("/movies/with_stock", tags=["movies"], response_model=MoviePublic)
 async def add_movie_with_stock(movie: MovieCreate, session: SessionDep):
     repo = MovieRepository(session)
     return repo.add_with_stock(movie)
@@ -92,7 +92,7 @@ async def update_movie(id: int, movie: Movie, session: SessionDep):
         raise HTTPException(status_code=404, detail="Movie not found")
 
 
-@router.put("/movies/{id}/with_stock", tags=["movies"])
+@router.put("/movies/{id}/with_stock", tags=["movies"], response_model=MoviePublic)
 async def update_movie_with_stock(id: int, movie: MovieUpdate, session: SessionDep):
     try:
         repo = MovieRepository(session)
