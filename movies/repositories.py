@@ -1,4 +1,4 @@
-from sqlmodel import select
+from sqlmodel import select, col
 from base.repository import Repository
 from sqlalchemy.orm.exc import UnmappedInstanceError
 
@@ -74,8 +74,13 @@ class MovieRepository(Repository[Movie]):
     def get(self, id: int):
         return self.session.get(Genre, id)
 
-    def get_all(self):
-        statement = select(Movie)
+    def get_all(self, **kwargs):
+        title = kwargs.get("title")
+
+        if title:
+            statement = select(Movie).where(col(Movie.title).like(f"%{title}%"))
+        else:
+            statement = select(Movie)
         results = self.session.exec(statement).all()
         return results
 

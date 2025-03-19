@@ -1,9 +1,11 @@
+from typing import Optional
+
 from fastapi import APIRouter, HTTPException
+from sqlalchemy.orm.exc import UnmappedInstanceError
 
 from base.db_connection import SessionDep
 from movies.models import Movie, Genre, MovieCreate, MovieUpdate, MoviePublic
 from movies.repositories import GenreRepository, MovieRepository
-from sqlalchemy.orm.exc import UnmappedInstanceError
 
 router = APIRouter()
 
@@ -47,13 +49,13 @@ async def update_genre(id: int, genre: Genre, session: SessionDep):
         raise HTTPException(status_code=404, detail="Genre not found")
 
 
-@router.get("/movies", tags=["movies"])
-async def list_movies(session: SessionDep):
+@router.get("/movies", tags=["movies"], response_model=list[MoviePublic])
+async def list_movies(session: SessionDep, title: Optional[str] = None):
     repo = MovieRepository(session)
-    return repo.get_all()
+    return repo.get_all(title=title)
 
 
-@router.get("/movies/{id}", tags=["movies"])
+@router.get("/movies/{id}", tags=["movies"], response_model=MoviePublic)
 async def retrieve_movie(id: int, session: SessionDep):
     repo = MovieRepository(session)
     instance = repo.get(id)

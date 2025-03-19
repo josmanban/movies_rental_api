@@ -32,7 +32,7 @@ class MovieUpdate(BaseMovie):
 
 class MoviePublic(BaseMovie):
     id: int
-    copies: list["MovieCopyPublic"]
+    copies: list["MovieCopyPublicSmall"]
 
 
 class MovieCopyBase(SQLModel):
@@ -51,3 +51,9 @@ class MovieCopyPublic(MovieCopyBase):
     code: Optional[str]
     movie_id: int
     movie: Movie
+
+
+class MovieCopyPublicSmall(MovieCopyBase):
+    id: int
+    code: Optional[str]
+    movie_id: int
