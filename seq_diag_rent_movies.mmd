@@ -1,0 +1,25 @@
+---
+id: e1b67c73-314c-4ff9-a1e5-787b7306883b
+---
+sequenceDiagram
+    participant Client as API Client
+    participant API as FastAPI Endpoint (/movie_rents)
+    participant Repo as MovieRentRepository
+    participant MovieRentModel as MovieRent Model
+    participant MovieRentDetailModel as MovieRentDetail Model
+    participant DB as Database
+
+    Client->>API: POST /movie_rents (MovieRentCreate)
+    API->>Repo: add_rent(movie_rent: MovieRentCreate)
+    Repo->>MovieRentModel: Validate MovieRentCreate (model_validate)
+    MovieRentModel-->>Repo: Return MovieRent instance
+    Repo->>DB: Insert MovieRent record
+    DB-->>Repo: Persisted MovieRent record
+    Repo->>MovieRentDetailModel: Process MovieRentDetail instances (if any)
+    MovieRentDetailModel-->>Repo: Return MovieRentDetail instances
+    Repo->>DB: Insert MovieRentDetail records (if any)
+    DB-->>Repo: Persisted MovieRentDetail records
+    Repo->>DB: Commit transaction
+    Repo->>DB: Refresh MovieRent instance
+    Repo-->>API: Return MovieRentRetrieve
+    API-->>Client: Return HTTP 200 with MovieRentRetrieve

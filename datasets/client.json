@@ -1,0 +1,23 @@
+[
+    {
+        "address": "Laines 926",
+        "first_name": "Mariano",
+        "id": 1,
+        "last_name": "Banda",
+        "license_number": 33333333
+    },
+    {
+        "address": "lainez 926",
+        "first_name": "Manuel",
+        "id": 2,
+        "last_name": "Banda",
+        "license_number": 123123
+    },
+    {
+        "address": "lainez 926",
+        "first_name": "Alejandro",
+        "id": 3,
+        "last_name": "Banda",
+        "license_number": 123123
+    }
+]

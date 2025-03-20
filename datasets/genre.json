@@ -1,0 +1,27 @@
+[
+    {
+        "description": "drama genre",
+        "id": 1,
+        "name": "drama"
+    },
+    {
+        "description": "action genre",
+        "id": 2,
+        "name": "action"
+    },
+    {
+        "description": "romance genre",
+        "id": 3,
+        "name": "romance"
+    },
+    {
+        "description": "thriller genre",
+        "id": 4,
+        "name": "thriller"
+    },
+    {
+        "description": "comedy genre",
+        "id": 5,
+        "name": "comedy"
+    }
+]
