@@ -307,6 +307,12 @@ The project fulfills the following requirements from the `Challenge.pdf`:
 2. **Entity Relationships**: Properly models relationships between movies, genres, clients, and rentals.
 3. **Swagger Documentation**: Provides clear examples for API usage.
 4. **Data Validation**: Validates input data using Pydantic models.
+5. Lock the application dependencies (e.g., pipenv, poetry, pdm).
+6. Add testing with Pytest.
+7. Use the repository pattern with Generics to manage queries to the database.
+8. Separate Database entities from Domain entities by leveraging Domain Driven Design.
+9. Add quality gates using pre-commits to the codebase.
+10. Enhance the retrieve endpoints by adding the possibility to filter records by attributes.
 
 ---
 
