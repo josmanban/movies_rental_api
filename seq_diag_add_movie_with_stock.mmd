@@ -1,0 +1,29 @@
+---
+id: 297b4282-502f-40c5-a7e2-6151425fe4d4
+---
+sequenceDiagram
+    participant Client as API Client
+    participant API as FastAPI Endpoint (/movies/with_stock)
+    participant Repo as MovieRepository
+    participant MovieModel as Movie Model
+    participant MovieCopyModel as MovieCopy Model
+    participant DB as Database
+
+    Client->>API: POST /movies/with_stock (MovieCreate)
+    API->>Repo: add_with_stock(movie: MovieCreate)
+    Repo->>MovieModel: Validate MovieCreate (model_validate)
+    MovieModel-->>Repo: Return Movie instance
+    Repo->>DB: Insert Movie record
+    DB-->>Repo: Persisted Movie record
+    Repo->>MovieModel: Associate Movie with MovieCopies
+    Repo->>Repo: Generate MovieCopy instances (for stock)
+    loop Create MovieCopy instances
+        Repo->>MovieCopyModel: Create MovieCopy instance
+        MovieCopyModel-->>Repo: Return MovieCopy instance
+    end
+    Repo->>DB: Bulk insert MovieCopy records
+    DB-->>Repo: Persisted MovieCopy records
+    Repo->>DB: Commit transaction
+    Repo->>DB: Refresh Movie instance (with copies)
+    Repo-->>API: Return MoviePublic (with stock details)
+    API-->>Client: Return HTTP 200 with MoviePublic

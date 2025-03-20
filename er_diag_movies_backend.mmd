@@ -1,0 +1,47 @@
+---
+id: 925060cb-d3e9-48c7-9ac9-7a518c724c18
+---
+erDiagram
+    movierentdetail {
+        INTEGER movie_copy_id
+        INTEGER movie_rent_id
+        INTEGER id PK
+    }
+    moviecopy {
+        INTEGER movie_id
+        VARCHAR code
+        INTEGER id PK
+    }
+    movierent {
+        INTEGER client_id
+        DATETIME creation_datetime
+        DATETIME closed_datetime
+        BOOLEAN is_closed
+        INTEGER id PK
+    }
+    movie {
+        VARCHAR title
+        VARCHAR description
+        INTEGER year
+        VARCHAR director
+        INTEGER genre_id
+        INTEGER id PK
+    }
+    client {
+        VARCHAR first_name
+        VARCHAR last_name
+        VARCHAR address
+        INTEGER license_number
+        INTEGER id PK
+    }
+    genre {
+        INTEGER id PK
+        VARCHAR name
+        VARCHAR description
+    }
+
+    movierentdetail ||--o{ movierent : "movie_rent_id"
+    movierentdetail ||--o{ moviecopy : "movie_copy_id"
+    moviecopy ||--o{ movie : "movie_id"
+    movierent ||--o{ client : "client_id"
+    movie ||--o{ genre : "genre_id"
