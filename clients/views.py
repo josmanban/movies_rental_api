@@ -9,7 +9,7 @@ from sqlalchemy.orm.exc import UnmappedInstanceError
 router = APIRouter()
 
 
-@router.get("/clients/", response_model=list[Client])
+@router.get("/clients/", response_model=list[Client], tags=["clients"])
 async def get_clients(session: SessionDep):
     """
     Retrieve a list of all clients.
@@ -26,7 +26,7 @@ async def get_clients(session: SessionDep):
     return repository.get_all()
 
 
-@router.get("/clients/{client_id}", response_model=Client)
+@router.get("/clients/{client_id}", response_model=Client, tags=["clients"])
 async def get_client(client_id: int, session: SessionDep):
     """
     Retrieve a client by their ID.
@@ -46,7 +46,7 @@ async def get_client(client_id: int, session: SessionDep):
     return client
 
 
-@router.post("/clients/", response_model=Client)
+@router.post("/clients/", response_model=Client, tags=["clients"])
 async def create_client(client: Client, session: SessionDep):
     """
     Asynchronously creates a new client in the database.
@@ -61,7 +61,7 @@ async def create_client(client: Client, session: SessionDep):
     return repository.add(client)
 
 
-@router.put("/clients/{client_id}", response_model=Client)
+@router.put("/clients/{client_id}", response_model=Client, tags=["clients"])
 async def update_client(client_id: int, client: Client, session: SessionDep):
     """
     Updates an existing client in the database.
@@ -82,7 +82,7 @@ async def update_client(client_id: int, client: Client, session: SessionDep):
     return updated_client
 
 
-@router.delete("/clients/{client_id}", response_model=dict)
+@router.delete("/clients/{client_id}", response_model=dict, tags=["clients"])
 async def delete_client(client_id: int, session: SessionDep):
     """
     Deletes a client from the database.
