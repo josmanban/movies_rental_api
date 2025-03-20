@@ -184,15 +184,53 @@ async def add_movie(movie: Movie, session: SessionDep):
 @router.post("/movies/with_stock", tags=["movies"], response_model=MoviePublic)
 async def add_movie_with_stock(movie: MovieCreate, session: SessionDep):
     """
-    Asynchronously adds a new movie along with its stock information to the database.
+    Adds a new movie along with its stock information.
+    This asynchronous function allows the creation of a new movie entry in the database
+    and associates it with stock details. It utilizes the `MovieRepository` to handle
+    the database operations.
     Args:
-        movie (MovieCreate): An object containing the details of the movie to be added.
-        session (SessionDep): The database session dependency used for database operations.
+        movie (MovieCreate): The movie data to be added, including title, description,
+            release year, and other relevant details.
+        session (SessionDep): The database session dependency used to interact with
+            the database.
     Returns:
-        The result of the repository's `add_with_stock` method, which typically includes
-        the newly created movie record along with its stock details.
+        dict: A dictionary containing the details of the newly created movie along
+            with its stock information.
     Raises:
-        Any exceptions raised by the `MovieRepository` during the addition process.
+        HTTPException: If there is an issue with the database operation or if the
+            movie data is invalid.
+    Swagger:
+        - summary: Add a new movie with stock.
+        - description: Create a new movie entry in the database and associate it with stock details.
+        - tags:
+            - Movies
+        - requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/MovieCreate'
+        - responses:
+            200:
+                description: Movie successfully created with stock details.
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                id:
+                                    type: integer
+                                    description: The ID of the created movie.
+                                title:
+                                    type: string
+                                    description: The title of the movie.
+                                stock:
+                                    type: integer
+                                    description: The stock quantity of the movie.
+            400:
+                description: Invalid input data.
+            500:
+                description: Internal server error.
     """
 
     repo = MovieRepository(session)
@@ -224,15 +262,41 @@ async def update_movie(id: int, movie: Movie, session: SessionDep):
 @router.put("/movies/{id}/with_stock", tags=["movies"], response_model=MoviePublic)
 async def update_movie_with_stock(id: int, movie: MovieUpdate, session: SessionDep):
     """
-    Update a movie's details along with its stock information.
+    Updates a movie's details along with its stock information.
+    This asynchronous endpoint updates the details of a movie, including its stock,
+    based on the provided movie ID. If the movie is not found, a 404 HTTP exception
+    is raised.
     Args:
         id (int): The unique identifier of the movie to be updated.
         movie (MovieUpdate): An object containing the updated movie details.
-        session (SessionDep): The database session dependency for interacting with the database.
+        session (SessionDep): The database session dependency.
     Returns:
-        The updated movie object with stock information.
+        dict: The updated movie details, including stock information.
     Raises:
-        HTTPException: If the movie with the given ID is not found, a 404 error is raised.
+        HTTPException: If the movie with the given ID is not found (404 status code).
+    Swagger:
+        - summary: Update a movie with stock information.
+        - description: Updates a movie's details and stock in the database.
+        - parameters:
+            - name: id
+              in: path
+              required: true
+              description: The ID of the movie to update.
+              schema:
+                type: integer
+            - name: body
+              in: body
+              required: true
+              description: The updated movie details.
+              schema:
+                $ref: '#/definitions/MovieUpdate'
+        - responses:
+            200:
+              description: Movie successfully updated.
+              schema:
+                type: object
+            404:
+              description: Movie not found.
     """
 
     try:
